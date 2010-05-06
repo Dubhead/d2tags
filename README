@@ -1,0 +1,5 @@
+d2tags - converts DMD2's JSON output to Exuberant Ctags format.
+
+usage:
+% dmd -Xftags.json foo.d
+% d2tags tags.json > tags
