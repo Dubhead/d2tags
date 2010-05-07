@@ -17,6 +17,7 @@ Distributed under the Boost Software License, Version 1.0.
 import std.conv;
 import std.file;
 import std.json;
+import std.path;
 import std.stdio;
 import std.string;
 
@@ -126,20 +127,43 @@ void convertJSONObject(in string tagFile, ref string[] tagLines,
     return;
 }
 
-void main(string[] args)
+void convertJSONFile(in string directory, in string name,
+    ref string[] tagLines)
 {
-    string[] tagLines;
-
-    // Read and parse the JSON file content.
-    JSONValue val = parseJSON(readText(args[1]));
+    JSONValue val = parseJSON(readText(std.path.join(directory, name)));
 
     // for each D source file...
     foreach (JSONValue v; val.array) {
 	JSONValue[string] srcFileObject = v.object;
-
-	auto tagFile = srcFileObject["file"].str;
+	string tagFile = std.path.join(directory, srcFileObject["file"].str);
+	if (tagFile.indexOf("./") == 0)
+	    tagFile = tagFile[2..$];
 	convertJSONObject(tagFile, tagLines, srcFileObject, null);
     }
+}
+
+void convertJSONFileOrDir(in string path, ref string[] tagLines)
+{
+    if (isfile(path)) {
+	convertJSONFile(dirname(path), basename(path), tagLines);
+	return;
+    }
+    if (isdir(path)) {
+	foreach (jsonFilePath; listdir(path, "*.json")) {
+	    convertJSONFile(dirname(jsonFilePath), basename(jsonFilePath),
+		tagLines);
+	}
+	return;
+    }
+}
+
+void main(string[] args)
+{
+    string[] tagLines;
+
+    // convertJSONFile(args[1], tagLines);
+    foreach (path; args[1..$])
+	convertJSONFileOrDir(path, tagLines);
 
     tagLines.sort;
     writeln("!_TAG_FILE_SORTED\t1\t/0=unsorted, 1=sorted, 2=foldcase/");

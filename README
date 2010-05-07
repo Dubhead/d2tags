@@ -1,5 +1,18 @@
 d2tags - converts DMD2's JSON output to Exuberant Ctags format.
 
 usage:
-% dmd -Xftags.json foo.d
-% d2tags tags.json > tags
+% d2tags JSONFILE... > tags
+% d2tags DIRECTORY... > tags
+
+This should be fine for most cases:
+% cd TOP_OF_YOUR_SOURCE_TREE
+% d2tags . > tags
+
+For DIRECTORY, JSON files are searched there and in its subdirectories
+(recursively).  You can also intermix JSONFILEs and DIRECTORYs.
+
+Relative filepaths in the JSON files are adjusted to be relative to the
+current directory, so the tags file should be created there.
+
+suggested Vim configuration:
+set tags=./tags; tagrelative
