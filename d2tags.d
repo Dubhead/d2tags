@@ -142,6 +142,7 @@ void main(string[] args)
     }
 
     tagLines.sort;
+    writeln("!_TAG_FILE_SORTED\t1\t/0=unsorted, 1=sorted, 2=foldcase/");
     foreach (line; tagLines) {
 	writeln(line);
     }
