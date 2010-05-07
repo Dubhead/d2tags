@@ -15,6 +15,7 @@ Distributed under the Boost Software License, Version 1.0.
 */
 
 import std.conv;
+import std.file;
 import std.json;
 import std.stdio;
 import std.string;
@@ -130,12 +131,7 @@ void main(string[] args)
     string[] tagLines;
 
     // Read and parse the JSON file content.
-    auto f = File(args[1], "r");
-    string s = "";
-    foreach (ubyte[] buf; f.byChunk(4096))
-	s ~= buf;
-    f.close;
-    JSONValue val = parseJSON(s);
+    JSONValue val = parseJSON(readText(args[1]));
 
     // for each D source file...
     foreach (JSONValue v; val.array) {
