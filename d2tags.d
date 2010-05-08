@@ -161,7 +161,6 @@ void main(string[] args)
 {
     string[] tagLines;
 
-    // convertJSONFile(args[1], tagLines);
     foreach (path; args[1..$])
 	convertJSONFileOrDir(path, tagLines);
 
