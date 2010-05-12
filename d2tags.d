@@ -93,7 +93,7 @@ void convertJSONObject(in string tagFile, ref string[] tagLines,
     case "alias":
 	newLine ~= "t\t" ~ affiliation(parentJsonObject);
 	break;
-    case "constructor":
+    case "constructor", "destructor":
 	// Special case: Use the class name as the tagname.
 	newLine = format("%s\t%s\t%d;\"\tm\tclass:%s",
 	    parentName, tagFile, jsonObject["line"].integer, parentName);
